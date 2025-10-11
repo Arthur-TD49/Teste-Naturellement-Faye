@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naturellement Faye</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide-react@0.264.0/dist/lucide-react.umd.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .active\:scale-95:active { transform: scale(0.95); }
+    .active\:scale-98:active { transform: scale(0.98); }
+    #map { width: 100%; height: 100%; border-radius: 1rem; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const {
+      useState, useEffect, useRef, useCallback
+    } = React;
+
+    const {
+      Camera, MapPin, Phone, Mail, Clock, Home, Info, ShoppingBag, MessageSquare, Menu, X, ChevronRight, Star, Heart, Share2
+    } = lucideReact;
+
+    const products = [
+      { id: 1, name: 'Fraises Artisanales', emoji: '🍓', description: 'Cultivées en plein champ avec des méthodes traditionnelles', price: '6.50€/kg', image: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&q=80' },
+      { id: 2, name: 'Radis Croquants', emoji: '🥕', description: 'Récoltés jeunes au petit matin pour une fraîcheur optimale', price: '3.20€/botte', image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400&q=80' },
+      { id: 3, name: 'Salades Vivantes', emoji: '🥬', description: 'Plusieurs variétés anciennes disponibles selon les saisons', price: '2.80€/pièce', image: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400&q=80' },
+      { id: 4, name: 'Carottes Sucrées', emoji: '🥕', description: 'Cultivées dans un sol riche pour un arôme naturel intense', price: '4.50€/kg', image: 'https://images.unsplash.com/photo-1445282768818-728615cc910a?w=400&q=80' },
+      { id: 5, name: 'Tomates Anciennes', emoji: '🍅', description: 'Variétés traditionnelles au goût d\'autrefois', price: '5.80€/kg', image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&q=80' },
+      { id: 6, name: 'Courgettes Bio', emoji: '🥒', description: 'Tendres et savoureuses, fraîchement cueillies', price: '3.90€/kg', image: 'https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&q=80' },
+    ];
+
+    const MapComponent = () => {
+      const mapContainer = useRef(null);
+      const map = useRef(null);
+
+      useEffect(() => {
+        mapboxgl.accessToken = 'TA_CLE_API_MAPBOX'; // Remplace par ta clé Mapbox
+        if (map.current) return;
+
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [-0.57918, 47.41322], // Coordonnées de Faye-d'Anjou
+          zoom: 12,
+        });
+
+        new mapboxgl.Marker()
+          .setLngLat([-0.57918, 47.41322])
+          .setPopup(new mapboxgl.Popup().setHTML('<h3>Naturellement Faye</h3><p>Rue du Clos des Mailles, 49380 Faye-d\'Anjou</p>'))
+          .addTo(map.current);
+      }, []);
+
+      return <div id="map" ref={mapContainer} className="h-64 rounded-2xl" />;
+    };
+
+    const NaturellementFayeApp = () => {
+      const [activeTab, setActiveTab] = useState('home');
+      const [favorites, setFavorites] = useState([]);
+      const [searchTerm, setSearchTerm] = useState('');
+
+      const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      const toggleFavorite = (productId) => {
+        setFavorites(prev =>
+          prev.includes(productId)
+            ? prev.filter(id => id !== productId)
+            : [...prev, productId]
+        );
+      };
+
+      const HomeScreen = () => (
+        <div className="space-y-6 pb-24">
+          {/* Hero Section */}
+          <div className="relative h-96 rounded-3xl overflow-hidden mx-4 mt-4 shadow-xl">
+            <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80" alt="Ferme" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <h1 className="text-3xl font-bold mb-2">Naturellement Faye</h1>
+              <p className="text-sm opacity-90">🌱 Légumes bio & locaux depuis 2020</p>
+            </div>
+          </div>
+          {/* Quick Actions */}
+          <div className="grid grid-cols-2 gap-3 px-4">
+            <button onClick={() => setActiveTab('products')} className="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-2xl shadow-lg active:scale-95 transition">
+              <ShoppingBag className="w-6 h-6 mb-2" />
+              <div className="text-sm font-semibold">Nos Produits</div>
+            </button>
+            <button onClick={() => setActiveTab('contact')} className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-2xl shadow-lg active:scale-95 transition">
+              <MapPin className="w-6 h-6 mb-2" />
+              <div className="text-sm font-semibold">Nous Trouver</div>
+            </button>
+          </div>
+          {/* Featured Products */}
+          <div className="px-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Produits du Moment</h2>
+              <button onClick={() => setActiveTab('products')} className="text-green-600 text-sm font-semibold flex items-center gap-1">
+                Voir tout <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+              {products.slice(0, 4).map(product => (
+                <div key={product.id} className="flex-shrink-0 w-40 bg-white rounded-2xl shadow-md overflow-hidden">
+                  <div className="relative h-32">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                    <button onClick={() => toggleFavorite(product.id)} className="absolute top-2 right-2 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center active:scale-90 transition">
+                      <Heart className={`w-4 h-4 ${favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                    </button>
+                  </div>
+                  <div className="p-3">
+                    <div className="text-xs font-semibold text-gray-800 mb-1">{product.name}</div>
+                    <div className="text-xs text-green-600 font-bold">{product.price}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Testimonial */}
+          <div className="mx-4 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6">
+            <div className="flex gap-1 mb-3">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
+            </div>
+            <p className="text-sm text-gray-700 italic mb-3">"Des super tomates qui ont le goût d'autrefois, toujours un accueil chaleureux et authentique!"</p>
+            <p className="text-xs text-gray-600 font-semibold">- Rima Y.</p>
+          </div>
+          {/* Hours */}
+          <div className="mx-4 bg-white rounded-2xl p-4 shadow-md">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                <Clock className="w-5 h-5 text-green-600" />
+              </div>
+              <h3 className="font-bold text-gray-800">Horaires d'ouverture</h3>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Mercredi</span>
+                <span className="font-semibold text-green-600">15h30 - 19h00</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Samedi</span>
+                <span className="font-semibold text-green-600">9h00 - 12h30</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+      const ProductsScreen = () => (
+        <div className="pb-24">
+          <div className="sticky top-0 bg-white/95 backdrop-blur z-10 px-4 py-4 border-b border-gray-100">
+            <div className="flex items-center gap-3 mb-4">
+              <input
+                type="text"
+                placeholder="Rechercher un produit..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+            <h1 className="text-2xl font-bold">Nos Légumes Bio</h1>
+            <p className="text-sm text-gray-600">Fraîcheur garantie 🌱</p>
+          </div>
+          <div className="p-4 space-y-3">
+            {filteredProducts.map(product => (
+              <div key={product.id} className="bg-white rounded-2xl shadow-md overflow-hidden active:scale-98 transition">
+                <div className="flex">
+                  <div className="relative w-28 h-28 flex-shrink-0">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-bold text-gray-800">{product.name}</h3>
+                      <button onClick={() => toggleFavorite(product.id)} className="p-1 active:scale-90 transition">
+                        <Heart className={`w-5 h-5 ${favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-2">{product.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-green-600 font-bold">{product.price}</span>
+                      <button className="bg-green-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold active:scale-95 transition">
+                        Commander
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+
+      const AboutScreen = () => (
+        <div className="pb-24">
+          <div className="relative h-64">
+            <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80" alt="Notre ferme" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <h1 className="text-3xl font-bold">Notre Histoire</h1>
+            </div>
+          </div>
+          <div className="p-6 space-y-6">
+            <div className="bg-white rounded-2xl p-6 shadow-md">
+              <h2 className="text-xl font-bold mb-4 text-gray-800">Une Passion Familiale</h2>
+              <p className="text-gray-700 leading-relaxed mb-4">Bienvenue chez Naturellement Faye, une ferme maraîchère passionnée par la culture de légumes biologiques de qualité exceptionnelle.</p>
+              <p className="text-gray-700 leading-relaxed mb-4">Notre philosophie est simple : cultiver en harmonie avec la nature, sans produits chimiques, en favorisant la biodiversité et en respectant les cycles naturels.</p>
+              <p className="text-gray-700 leading-relaxed">Nous privilégions les variétés anciennes et locales pour vous offrir une expérience gustative authentique.</p>
+            </div>
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6">
+              <h3 className="font-bold text-gray-800 mb-3">Nos Valeurs</h3>
+              <div className="space-y-3">
+                {['🌱 100% Bio & Local', '♻️ Zéro Pesticide', '🌍 Respect de la Terre', '❤️ Passion & Authenticité'].map((value, i) => (
+                  <div key={i} className="flex items-center gap-2 text-sm text-gray-700">
+                    <div className="w-2 h-2 bg-green-500 rounded-full" />
+                    {value}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+      const ContactScreen = () => (
+        <div className="pb-24">
+          <div className="sticky top-0 bg-white/95 backdrop-blur z-10 px-4 py-4 border-b border-gray-100">
+            <h1 className="text-2xl font-bold">Contact</h1>
+            <p className="text-sm text-gray-600">Venez nous rendre visite</p>
+          </div>
+          <div className="p-4 space-y-3">
+            <MapComponent />
+            <div className="bg-white rounded-2xl p-4 shadow-md space-y-3">
+              <a href="tel:+33631298471" className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl active:bg-gray-100 transition">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Phone className="w-6 h-6 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-xs text-gray-600">Téléphone</div>
+                  <div className="font-semibold text-gray-800">06 31 29 84 71</div>
+                </div>
+              </a>
+              <a href="mailto:contact@naturellementfaye.fr" className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl active:bg-gray-100 transition">
+                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                  <Mail className="w-6 h-6 text-purple-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-xs text-gray-600">Email</div>
+                  <div className="font-semibold text-gray-800 text-sm">contact@naturellementfaye.fr</div>
+                </div>
+              </a>
+            </div>
+            <div className="bg-white rounded-2xl p-5 shadow-md">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-orange-600" />
+                </div>
+                <h3 className="font-bold text-gray-800">Horaires de Vente</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
+                  <span className="font-semibold text-gray-700">Mercredi</span>
+                  <span className="text-green-600 font-bold">15h30 - 19h00</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
+                  <span className="font-semibold text-gray-700">Samedi</span>
+                  <span className="text-green-600 font-bold">9h00 - 12h30</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <a href="https://www.facebook.com/NaturellementFaye/" target="_blank" className="flex-1 bg-blue-600 text-white p-4 rounded-2xl flex items-center justify-center gap-2 font-semibold active:scale-95 transition">
+                <span>Facebook</span>
+              </a>
+              <a href="https://www.youtube.com/@NaturellementFaye" target="_blank" className="flex-1 bg-red-600 text-white p-4 rounded-2xl flex items-center justify-center gap-2 font-semibold active:scale-95 transition">
+                <span>YouTube</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+
+      return (
+        <div className="max-w-md mx-auto bg-gray-50 min-h-screen relative">
+          {/* Status Bar */}
+          <div className="bg-white px-4 pt-3 pb-2 flex justify-between items-center text-xs">
+            <span className="font-semibold">9:41</span>
+            <div className="flex gap-1">
+              <div className="w-4 h-3 border border-gray-800 rounded-sm relative">
+                <div className="absolute inset-0.5 bg-gray-800 rounded-sm" />
+              </div>
+            </div>
+          </div>
+          {/* Content */}
+          <div className="bg-gray-50">
+            {activeTab === 'home' && <HomeScreen />}
+            {activeTab === 'products' && <ProductsScreen />}
+            {activeTab === 'about' && <AboutScreen />}
+            {activeTab === 'contact' && <ContactScreen />}
+          </div>
+          {/* Bottom Navigation */}
+          <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-200 px-6 py-3 rounded-t-3xl shadow-lg">
+            <div className="flex justify-around items-center">
+              {[
+                { id: 'home', icon: Home, label: 'Accueil' },
+                { id: 'products', icon: ShoppingBag, label: 'Produits' },
+                { id: 'about', icon: Info, label: 'À propos' },
+                { id: 'contact', icon: MessageSquare, label: 'Contact' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition ${
+                    activeTab === tab.id ? 'text-green-600' : 'text-gray-400'
+                  }`}
+                >
+                  <tab.icon className={`w-6 h-6 ${activeTab === tab.id ? 'scale-110' : ''} transition`} />
+                  <span className={`text-xs font-semibold ${activeTab === tab.id ? 'opacity-100' : 'opacity-70'}`}>
+                    {tab.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<NaturellementFayeApp />);
+  </script>
+</body>
+</html>
