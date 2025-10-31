@@ -190,6 +190,89 @@
             transform: rotate(90deg);
         }
 
+        /* LANGUAGE SELECTOR */
+        .language-selector {
+            position: fixed;
+            top: 120px;
+            right: 2rem;
+            z-index: 1001;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(106, 176, 76, 0.1);
+            display: none;
+        }
+
+        .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background: rgba(106, 176, 76, 0.1);
+            color: var(--primary-green);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            padding: 1rem;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(106, 176, 76, 0.1);
+            margin-top: 0.5rem;
+        }
+
+        .language-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .language-option:hover {
+            background: rgba(106, 176, 76, 0.1);
+            transform: translateX(5px);
+        }
+
+        .language-option.active {
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+        }
+
+        .language-flag {
+            font-size: 1.2rem;
+        }
+
         /* LOADER */
         .loader {
             position: fixed;
@@ -334,7 +417,7 @@
         /* HERO */
         .hero {
             height: 100vh;
-            background: linear-gradient(135deg, rgba(106, 176, 76, 0.8), rgba(186, 220, 88, 0.7)), url('accueil.jpeg ');
+            background: linear-gradient(135deg, rgba(106, 176, 76, 0.8), rgba(186, 220, 88, 0.7)), url('https://images.unsplash.com/photo-1489450278009-822e9be04dff?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2072');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -538,6 +621,29 @@
             <div class="popup-buttons">
                 <button class="popup-btn popup-btn-primary" id="popupPrimary" data-translate="popup_cta">Découvrir nos légumes</button>
                 <button class="popup-btn popup-btn-secondary" id="popupSecondary" data-translate="popup_close">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LANGUAGE SELECTOR -->
+    <div class="language-selector">
+        <button class="language-toggle" id="languageToggle">
+            <span class="language-flag" id="currentFlag">🇫🇷</span>
+            <span id="currentLang">Français</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="language-dropdown" id="languageDropdown">
+            <div class="language-option active" data-lang="fr" data-flag="🇫🇷">
+                <span class="language-flag">🇫🇷</span>
+                <span>Français</span>
+            </div>
+            <div class="language-option" data-lang="en" data-flag="🇬🇧">
+                <span class="language-flag">🇬🇧</span>
+                <span>English</span>
+            </div>
+            <div class="language-option" data-lang="es" data-flag="🇪🇸">
+                <span class="language-flag">🇪🇸</span>
+                <span>Español</span>
             </div>
         </div>
     </div>
