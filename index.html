@@ -19,16 +19,12 @@
                             200: '#cfe7c2',
                             300: '#acd498',
                             400: '#83bc6a',
-                            500: '#629f49', // Primary Green
+                            500: '#629f49', // Vert Naturellement Faye
                             600: '#4c8137',
                             700: '#3c662d',
                             800: '#325227',
                             950: '#172e12',
                         },
-                        accent: {
-                            orange: '#ff7675',
-                            cream: '#ffeaa7',
-                        }
                     },
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
@@ -46,13 +42,13 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Leaflet CSS for Map -->
+    <!-- Leaflet CSS pour la Carte -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
     <style>
-        /* Custom Animations & Smooth Classes */
+        /* Styles et transitions sur mesure */
         .glass-header {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
@@ -66,7 +62,6 @@
             100% { transform: translateY(-15px) rotate(15deg); }
         }
 
-        /* Floating Animation */
         .float-animation {
             animation: floatY 6s ease-in-out infinite;
         }
@@ -76,7 +71,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* Smooth reveal trigger */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -88,7 +82,6 @@
             transform: translateY(0);
         }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -106,14 +99,14 @@
 </head>
 <body class="bg-brand-50 text-slate-800 antialiased overflow-x-hidden font-sans">
 
-    <!-- LOADER -->
+    <!-- ÉCRAN DE CHARGEMENT -->
     <div id="loader" class="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-white transition-all duration-700 ease-in-out">
         <div class="text-center">
             <div class="loader-leaf inline-block mb-6">
                 <span class="text-6xl text-brand-500">🌱</span>
             </div>
-            <h2 class="text-3xl font-extrabold text-brand-950 tracking-tight" id="loader-title">Naturellement Faye</h2>
-            <p class="text-brand-600 mt-2 font-medium" id="loader-subtitle">Agriculture Biologique & Locale</p>
+            <h2 class="text-3xl font-extrabold text-brand-950 tracking-tight">Naturellement Faye</h2>
+            <p class="text-brand-600 mt-2 font-medium">Agriculture Biologique & Locale</p>
             <div class="mt-8 flex justify-center gap-1.5">
                 <span class="h-2.5 w-2.5 rounded-full bg-brand-400 animate-bounce" style="animation-delay: 0.1s"></span>
                 <span class="h-2.5 w-2.5 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0.2s"></span>
@@ -122,10 +115,9 @@
         </div>
     </div>
 
-    <!-- POPUP AU DÉMARRAGE -->
+    <!-- POPUP D'ACCUEIL -->
     <div id="popupOverlay" class="fixed inset-0 z-[9999] hidden flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm transition-all duration-500">
         <div class="relative w-full max-w-lg transform overflow-hidden rounded-3xl bg-white p-8 shadow-2xl transition-all duration-500 scale-95 opacity-0" id="popupContent">
-            <!-- Decorative header green bar -->
             <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-brand-400 to-brand-600"></div>
             
             <button id="popupClose" class="absolute top-5 right-5 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-brand-100 hover:text-brand-600 transition-all">
@@ -139,7 +131,7 @@
                 
                 <div class="flex flex-col sm:flex-row gap-3">
                     <button id="popupPrimary" class="flex-1 rounded-2xl bg-brand-500 py-3.5 px-6 font-bold text-white shadow-lg shadow-brand-500/20 hover:bg-brand-600 hover:shadow-brand-500/30 hover:-translate-y-0.5 transition-all duration-200" data-translate="popup_cta">
-                        Découvrir nos légumes
+                        Découvrir nos paniers
                     </button>
                     <button id="popupSecondary" class="flex-1 rounded-2xl bg-slate-100 py-3.5 px-6 font-semibold text-slate-700 hover:bg-slate-200 transition-all duration-200" data-translate="popup_close">
                         Fermer
@@ -149,7 +141,7 @@
         </div>
     </div>
 
-    <!-- HEADER -->
+    <!-- EN-TÊTE / NAVIGATION -->
     <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <nav class="flex items-center justify-between py-4 lg:py-5">
@@ -159,16 +151,17 @@
                     <span class="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-brand-600 to-brand-400 bg-clip-text text-transparent">Naturellement Faye</span>
                 </a>
 
-                <!-- Desktop Menu -->
+                <!-- Liens Desktop -->
                 <div class="hidden md:flex items-center gap-8">
                     <ul class="flex items-center gap-8 font-semibold text-slate-700">
                         <li><a href="#accueil" class="hover:text-brand-500 transition-colors" data-translate="nav_home">Accueil</a></li>
                         <li><a href="#a-propos" class="hover:text-brand-500 transition-colors" data-translate="nav_about">À propos</a></li>
+                        <li><a href="#paniers" class="text-brand-600 hover:text-brand-500 transition-colors flex items-center gap-1.5" data-translate="nav_baskets"><i class="fa-solid fa-basket-shopping"></i> Nos Paniers</a></li>
                         <li><a href="#produits" class="hover:text-brand-500 transition-colors" data-translate="nav_products">Nos légumes</a></li>
                         <li><a href="#contact" class="hover:text-brand-500 transition-colors" data-translate="nav_contact">Contact</a></li>
                     </ul>
 
-                    <!-- Language Selector (Desktop) -->
+                    <!-- Sélecteur de langue (Desktop) -->
                     <div class="relative">
                         <button id="langBtn" class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 hover:border-brand-300 hover:bg-brand-50 transition-all text-sm font-semibold text-slate-700">
                             <span id="currentFlag">🇫🇷</span>
@@ -189,9 +182,9 @@
                     </div>
                 </div>
 
-                <!-- Right Side Actions & Mobile Trigger -->
+                <!-- Actions mobiles et burger -->
                 <div class="flex items-center gap-3 md:hidden">
-                    <!-- Language Selector (Mobile Icon Only) -->
+                    <!-- Sélecteur de langue (Mobile) -->
                     <div class="relative">
                         <button id="langBtnMobile" class="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700">
                             <span id="currentFlagMobile">🇫🇷</span>
@@ -209,7 +202,7 @@
                         </div>
                     </div>
 
-                    <!-- Mobile Menu Button -->
+                    <!-- Bouton menu burger -->
                     <button id="menuBtn" class="flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white text-brand-600 transition-all">
                         <span class="block h-0.5 w-5 bg-current transition-transform duration-300 rounded-full" id="line1"></span>
                         <span class="block h-0.5 w-5 bg-current transition-opacity duration-300 rounded-full" id="line2"></span>
@@ -219,12 +212,13 @@
             </nav>
         </div>
 
-        <!-- Mobile Navigation Menu -->
+        <!-- Menu de navigation Mobile -->
         <div id="mobileMenu" class="md:hidden max-h-0 overflow-hidden bg-white/95 backdrop-blur-xl border-t border-slate-100 transition-all duration-300 ease-in-out">
             <div class="px-4 py-6 space-y-4">
                 <ul class="space-y-3 font-semibold text-slate-700 text-lg">
                     <li><a href="#accueil" class="block py-2.5 px-4 rounded-xl hover:bg-brand-50 hover:text-brand-500 transition-all" data-translate="nav_home">Accueil</a></li>
                     <li><a href="#a-propos" class="block py-2.5 px-4 rounded-xl hover:bg-brand-50 hover:text-brand-500 transition-all" data-translate="nav_about">À propos</a></li>
+                    <li><a href="#paniers" class="block py-2.5 px-4 rounded-xl bg-brand-50 text-brand-600 hover:text-brand-500 transition-all" data-translate="nav_baskets">🧺 Nos Paniers</a></li>
                     <li><a href="#produits" class="block py-2.5 px-4 rounded-xl hover:bg-brand-50 hover:text-brand-500 transition-all" data-translate="nav_products">Nos légumes</a></li>
                     <li><a href="#contact" class="block py-2.5 px-4 rounded-xl hover:bg-brand-50 hover:text-brand-500 transition-all" data-translate="nav_contact">Contact</a></li>
                 </ul>
@@ -232,18 +226,15 @@
         </div>
     </header>
 
-    <!-- HERO -->
+    <!-- SECTION HERO (ACCUEIL) -->
     <section class="relative min-h-screen flex items-center justify-center bg-brand-950 overflow-hidden pt-20" id="accueil">
-        <!-- Background Image with beautiful gradient overlay -->
         <div class="absolute inset-0 bg-cover bg-center mix-blend-multiply opacity-50 transition-transform duration-1000 scale-105" style="background-image: url('https://images.unsplash.com/photo-1489450278009-822e9be04dff?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2072');"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-950/70 to-slate-900/40"></div>
 
-        <!-- Floating organic SVG shapes for dynamic style -->
         <div class="absolute top-24 left-10 w-24 h-24 bg-brand-400/20 rounded-full blur-2xl float-animation"></div>
         <div class="absolute bottom-16 right-10 w-32 h-32 bg-brand-300/10 rounded-full blur-3xl float-animation" style="animation-delay: 2s"></div>
 
         <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white z-10 py-12">
-            <!-- Badge -->
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-400/20 border border-brand-300/30 text-brand-300 font-semibold text-sm mb-6 animate-pulse">
                 <span>🥕</span> 100% Biologique & Local
             </div>
@@ -257,16 +248,15 @@
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="#produits" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-brand-500 font-bold hover:bg-brand-600 shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 transition-all duration-300 hover:-translate-y-0.5 text-center" data-translate="hero_cta">
-                    Découvrir nos légumes
+                <a href="#paniers" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-brand-500 font-bold hover:bg-brand-600 shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 transition-all duration-300 hover:-translate-y-0.5 text-center" data-translate="hero_basket_cta">
+                    Réserver un panier bio
                 </a>
-                <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-2xl border border-white/30 bg-white/10 hover:bg-white/20 font-bold backdrop-blur-md transition-all text-center">
-                    Nous rendre visite
+                <a href="#produits" class="w-full sm:w-auto px-8 py-4 rounded-2xl border border-white/30 bg-white/10 hover:bg-white/20 font-bold backdrop-blur-md transition-all text-center" data-translate="hero_cta">
+                    Découvrir nos légumes
                 </a>
             </div>
         </div>
 
-        <!-- Wave divider at bottom -->
         <div class="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-[0]">
             <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-12 text-brand-50 fill-current">
                 <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,8.75,57.05,18.3,91.33,26.8,175.61,47.83,252.36,63.15,321.39,56.44Z"></path>
@@ -274,11 +264,10 @@
         </div>
     </section>
 
-    <!-- KEY FEATURES / STATS -->
+    <!-- CARDS CARACTÉRISTIQUES -->
     <section class="py-12 bg-brand-50 relative z-20 -mt-2">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Card 1 -->
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 flex items-center gap-5 hover:shadow-md transition-all duration-300">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 text-xl">
                         <i class="fa-solid fa-seedling"></i>
@@ -288,7 +277,6 @@
                         <p class="text-sm text-slate-500 mt-0.5">Aucun pesticide chimique</p>
                     </div>
                 </div>
-                <!-- Card 2 -->
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 flex items-center gap-5 hover:shadow-md transition-all duration-300">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 text-xl">
                         <i class="fa-solid fa-truck-ramp-box"></i>
@@ -298,26 +286,223 @@
                         <p class="text-sm text-slate-500 mt-0.5">Récolté le matin, vendu l'après-midi</p>
                     </div>
                 </div>
-                <!-- Card 3 -->
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 flex items-center gap-5 hover:shadow-md transition-all duration-300">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-600 text-xl">
-                        <i class="fa-solid fa-wheat-awn"></i>
+                        <i class="fa-solid fa-basket-shopping"></i>
                     </div>
                     <div>
-                        <h4 class="font-bold text-slate-800">Variétés paysannes</h4>
-                        <p class="text-sm text-slate-500 mt-0.5">Goût authentique préservé</p>
+                        <h4 class="font-bold text-slate-800">Paniers de saison</h4>
+                        <p class="text-sm text-slate-500 mt-0.5">Composition selon la récolte matinale</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section id="a-propos" class="section py-20 bg-white">
+    <!-- SECTION PANIERS INTERACTIFS -->
+    <section id="paniers" class="section py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <span class="inline-block px-3.5 py-1 rounded-full bg-brand-100 text-brand-700 font-bold text-xs mb-4 uppercase tracking-widest" data-translate="basket_badge">
+                    Vente Directe & Fraîcheur
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4" data-translate="basket_title">
+                    Nos Paniers de Légumes Bio
+                </h2>
+                <p class="text-lg text-slate-500 font-medium" data-translate="basket_subtitle">
+                    Nous vous proposons chaque mercredi et samedi des paniers fraîchement récoltés le matin-même, disponibles en trois formats adaptés à vos besoins.
+                </p>
+            </div>
+
+            <!-- Concept de fraîcheur du matin & Facebook -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 items-center reveal">
+                <div class="lg:col-span-7 bg-brand-50 rounded-3xl p-8 border border-brand-100">
+                    <div class="flex items-center gap-3.5 mb-4 text-brand-700">
+                        <span class="text-3xl">🌅</span>
+                        <h3 class="text-xl font-extrabold" data-translate="how_it_works_title">La fraîcheur absolue comme priorité</h3>
+                    </div>
+                    <p class="text-slate-600 leading-relaxed mb-4" data-translate="how_it_works_text1">
+                        Chez <strong>Naturellement Faye</strong>, pas de stockage inutile. Nous récoltons vos légumes <strong>le matin de la vente</strong>. C'est pourquoi la composition exacte du panier est finalisée à l'aube en fonction des légumes mûrs et prêts à être dégustés.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed font-semibold" data-translate="how_it_works_text2">
+                        📅 Les jours de retrait : les mercredis après-midi (15h30 - 19h00) ou les samedis matins (9h00 - 12h30) directement à notre ferme à Faye-d'Anjou.
+                    </p>
+                </div>
+                
+                <!-- Encadré Facebook -->
+                <div class="lg:col-span-5 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-3xl p-8 flex flex-col justify-between h-full shadow-sm hover:shadow-md transition-shadow">
+                    <div>
+                        <div class="flex items-center gap-3 text-blue-600 mb-4">
+                            <i class="fab fa-facebook text-4xl"></i>
+                            <span class="text-xs uppercase tracking-widest font-bold text-slate-500" data-translate="fb_card_badge">Suivez nos récoltes</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-800 mb-2" data-translate="fb_card_title">Composition publiée chaque matin !</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6" data-translate="fb_card_text">
+                            Nous partageons en photo la composition exacte de nos paniers directement sur notre page Facebook dès la fin de notre récolte matinale. Abonnez-vous pour ne rien rater !
+                        </p>
+                    </div>
+                    <a href="https://www.facebook.com/NaturellementFaye/" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-3 bg-blue-600 text-white rounded-2xl font-bold text-sm hover:bg-blue-700 transition-all shadow-md shadow-blue-600/10 hover:-translate-y-0.5">
+                        <i class="fab fa-facebook"></i> <span data-translate="fb_btn">Voir la page Facebook</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Grille des 3 Paniers (10, 14, 18) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <!-- Panier Solo/Duo : 10€ -->
+                <div class="bg-white border-2 border-brand-100 rounded-[2.5rem] overflow-hidden flex flex-col justify-between p-8 hover:border-brand-400 hover:shadow-xl transition-all duration-300 reveal group">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="text-xs font-bold text-brand-700 uppercase tracking-widest bg-brand-100 px-3 py-1.5 rounded-full" data-translate="basket1_badge">Solo / Duo</span>
+                            <span class="text-3xl">🧺</span>
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-slate-900 group-hover:text-brand-600 transition-colors" data-translate="basket1_title">Le Petit Panier</h3>
+                        <div class="flex items-baseline gap-1 my-4">
+                            <span class="text-4xl font-extrabold text-slate-900">10€</span>
+                            <span class="text-slate-400 text-sm">/ panier</span>
+                        </div>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-6" data-translate="basket1_desc">
+                            Parfait pour une personne seule ou un couple pour toute la semaine. Contient généralement 3 à 4 variétés de légumes ultra-frais du matin.
+                        </p>
+                        <ul class="space-y-3.5 text-sm text-slate-600 border-t border-slate-100 pt-6">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_fresh">Récolté le matin-même</span></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_weight_1">Environ 2.5 à 3.5 kg de légumes</span></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_local">100% Biologique & local</span></li>
+                        </ul>
+                    </div>
+                    <button onclick="selectBasket('Petit Panier', 10)" class="w-full mt-8 py-3.5 px-6 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold transition-all hover:scale-[1.02] shadow-md shadow-brand-500/10 flex items-center justify-center gap-2" data-translate="basket_order_btn">
+                        <i class="fa-solid fa-plus text-xs"></i> Choisir ce panier
+                    </button>
+                </div>
+
+                <!-- Panier Moyen : 14€ -->
+                <div class="bg-white border-2 border-brand-500 rounded-[2.5rem] overflow-hidden flex flex-col justify-between p-8 shadow-md relative hover:shadow-2xl transition-all duration-300 scale-105 z-10 reveal group" style="transition-delay: 150ms">
+                    <span class="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white text-xs font-extrabold px-4 py-1 rounded-full uppercase tracking-widest" data-translate="basket_popular">Le Plus Populaire</span>
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="text-xs font-bold text-brand-700 uppercase tracking-widest bg-brand-100 px-3 py-1.5 rounded-full" data-translate="basket2_badge">Famille de 2-3 personnes</span>
+                            <span class="text-3xl">🥕🥦</span>
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-slate-900 group-hover:text-brand-600 transition-colors" data-translate="basket2_title">Le Moyen Panier</h3>
+                        <div class="flex items-baseline gap-1 my-4">
+                            <span class="text-4xl font-extrabold text-brand-600">14€</span>
+                            <span class="text-slate-400 text-sm">/ panier</span>
+                        </div>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-6" data-translate="basket2_desc">
+                            Le format idéal pour couvrir la majorité des besoins d'une petite famille. Un excellent équilibre entre légumes de base (carottes, pommes de terre) et légumes d'exception.
+                        </p>
+                        <ul class="space-y-3.5 text-sm text-slate-600 border-t border-slate-100 pt-6">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_fresh">Récolté le matin-même</span></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_weight_2">Environ 4 à 5 kg de légumes</span></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_variety">5 à 6 variétés différentes</span></li>
+                        </ul>
+                    </div>
+                    <button onclick="selectBasket('Moyen Panier', 14)" class="w-full mt-8 py-3.5 px-6 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold transition-all hover:scale-[1.02] shadow-md shadow-brand-600/10 flex items-center justify-center gap-2" data-translate="basket_order_btn">
+                        <i class="fa-solid fa-plus text-xs"></i> Choisir ce panier
+                    </button>
+                </div>
+
+                <!-- Grand Panier : 18€ -->
+                <div class="bg-white border-2 border-brand-100 rounded-[2.5rem] overflow-hidden flex flex-col justify-between p-8 hover:border-brand-400 hover:shadow-xl transition-all duration-300 reveal group" style="transition-delay: 300ms">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="text-xs font-bold text-brand-700 uppercase tracking-widest bg-brand-100 px-3 py-1.5 rounded-full" data-translate="basket3_badge">Grande Famille / Amateurs</span>
+                            <span class="text-3xl">🥬🌽🥔</span>
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-slate-900 group-hover:text-brand-600 transition-colors" data-translate="basket3_title">Le Grand Panier</h3>
+                        <div class="flex items-baseline gap-1 my-4">
+                            <span class="text-4xl font-extrabold text-slate-900">18€</span>
+                            <span class="text-slate-400 text-sm">/ panier</span>
+                        </div>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-6" data-translate="basket3_desc">
+                            Pour les grandes tablées ou les passionnés de cuisine saine. Une abondance de fraîcheur comprenant des légumes anciens et des herbes aromatiques de saison.
+                        </p>
+                        <ul class="space-y-3.5 text-sm text-slate-600 border-t border-slate-100 pt-6">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_fresh">Récolté le matin-même</span></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_weight_3">Environ 6 kg ou plus</span></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-translate="bullet_variety_large">Diversité maximale de saison</span></li>
+                        </ul>
+                    </div>
+                    <button onclick="selectBasket('Grand Panier', 18)" class="w-full mt-8 py-3.5 px-6 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold transition-all hover:scale-[1.02] shadow-md shadow-brand-500/10 flex items-center justify-center gap-2" data-translate="basket_order_btn">
+                        <i class="fa-solid fa-plus text-xs"></i> Choisir ce panier
+                    </button>
+                </div>
+            </div>
+
+            <!-- Formulaire de réservation de panier -->
+            <div id="bookingFormContainer" class="hidden max-w-3xl mx-auto bg-brand-50 border-2 border-brand-200 p-8 sm:p-10 rounded-[2.5rem] mt-12 transition-all duration-500 scroll-mt-24">
+                <div class="text-center mb-6">
+                    <span class="text-3xl">📝</span>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mt-2" data-translate="booking_title">Votre réservation de Panier</h3>
+                    <p class="text-slate-500 text-sm" data-translate="booking_subtitle">Préparez votre réservation à venir retirer à la ferme.</p>
+                </div>
+
+                <form id="basketBookingForm" class="space-y-6">
+                    <div class="bg-white p-5 rounded-2xl border border-brand-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-wider" data-translate="booking_selected">Panier sélectionné</p>
+                            <h4 id="selectedBasketName" class="text-lg font-bold text-slate-800">Moyen Panier</h4>
+                            <p id="selectedBasketPrice" class="text-sm text-brand-600 font-bold">14€ l'unité</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button type="button" onclick="changeQuantity(-1)" class="w-10 h-10 bg-slate-100 hover:bg-brand-100 text-slate-700 hover:text-brand-700 font-extrabold rounded-xl transition-colors">-</button>
+                            <span id="basketQuantity" class="text-lg font-bold text-slate-900 w-6 text-center">1</span>
+                            <button type="button" onclick="changeQuantity(1)" class="w-10 h-10 bg-slate-100 hover:bg-brand-100 text-slate-700 hover:text-brand-700 font-extrabold rounded-xl transition-colors">+</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2" data-translate="booking_day">Jour de retrait souhaité</label>
+                            <select id="pickupDay" required class="w-full rounded-2xl border-slate-200 bg-white px-4 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all">
+                                <option value="Mercredi" data-translate="day_wednesday">Mercredi après-midi (15h30 - 19h00)</option>
+                                <option value="Samedi" data-translate="day_saturday">Samedi matin (9h00 - 12h30)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2" data-translate="booking_phone">Votre numéro de téléphone</label>
+                            <input type="tel" id="pickupPhone" required class="w-full rounded-2xl border-slate-200 bg-white px-4 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="06 12 34 56 78">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2" data-translate="booking_name">Nom complet</label>
+                            <input type="text" id="pickupName" required class="w-full rounded-2xl border-slate-200 bg-white px-4 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="Jean Dupont">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2" data-translate="booking_email">Adresse e-mail</label>
+                            <input type="email" id="pickupEmail" required class="w-full rounded-2xl border-slate-200 bg-white px-4 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="jean@example.com">
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-150 pt-4 flex justify-between items-center">
+                        <span class="text-slate-600 font-medium" data-translate="booking_total">Montant de la réservation (à régler sur place) :</span>
+                        <span id="bookingTotalPrice" class="text-2xl font-extrabold text-brand-700">14€</span>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl transition-all shadow-md shadow-brand-500/20 hover:-translate-y-0.5">
+                            <i class="fa-solid fa-basket-shopping mr-2"></i> <span data-translate="booking_validate">Confirmer ma réservation</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div id="bookingSuccessMessage" class="hidden mt-6 p-6 rounded-2xl bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    <p class="font-extrabold text-lg text-center mb-2">🎉 Réservation validée !</p>
+                    <p class="text-sm text-center leading-relaxed" data-translate="booking_success_text">
+                        Merci pour votre confiance. Votre panier fraîchement récolté sera prêt pour vous le jour choisi à Faye-d'Anjou. Le paiement se fera directement à la ferme lors du retrait (espèces, chèque ou virement).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION À PROPOS -->
+    <section id="a-propos" class="section py-20 bg-brand-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
-                <!-- Text Column (Left) -->
                 <div class="lg:col-span-7 reveal">
                     <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-100 text-brand-700 font-semibold text-xs mb-4">
                         🧑‍🌾 Qui sommes-nous ?
@@ -352,19 +537,14 @@
                     </a>
                 </div>
 
-                <!-- Image Gallery/Layout Column (Right) -->
                 <div class="lg:col-span-5 reveal" style="transition-delay: 200ms">
                     <div class="relative">
-                        <!-- Background colored blob for artistic texture -->
                         <div class="absolute -top-6 -left-6 w-32 h-32 bg-brand-200/50 rounded-3xl -z-10"></div>
                         
-                        <!-- Main Image -->
                         <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white aspect-[4/3] sm:aspect-square">
-                            <!-- Placeholder high-quality fallback of dynamic farming if assets missing, stylized with local context -->
                             <img src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?ixlib=rb-4.0.3&auto=format&fit=crop&q=80&w=1000" onerror="this.src='papa.jpeg'" alt="Ferme paysanne de Faye d'Anjou" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                         </div>
 
-                        <!-- Mini Float badge -->
                         <div class="absolute -bottom-6 -right-6 bg-brand-950 text-white rounded-2xl p-4 shadow-xl max-w-xs flex items-center gap-3.5 border border-brand-800 float-animation">
                             <span class="text-3xl">🥦</span>
                             <div>
@@ -379,8 +559,8 @@
         </div>
     </section>
 
-    <!-- PRODUCTS SECTION -->
-    <section id="produits" class="section py-20 bg-brand-50">
+    <!-- SECTION NOS LÉGUMES -->
+    <section id="produits" class="section py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-16 reveal">
@@ -396,7 +576,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Product 1 -->
+                <!-- Légume 1 -->
                 <div class="bg-white rounded-3xl overflow-hidden shadow-md border border-slate-100 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 reveal group">
                     <div class="relative overflow-hidden aspect-[4/3]">
                         <img src="https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?ixlib=rb-4.0.3&auto=format&fit=crop&q=80&w=800" onerror="this.src='IMG_0752.jpg'" alt="Les courges de Naturellement Faye" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -412,7 +592,7 @@
                     </div>
                 </div>
 
-                <!-- Product 2 -->
+                <!-- Légume 2 -->
                 <div class="bg-white rounded-3xl overflow-hidden shadow-md border border-slate-100 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 reveal group" style="transition-delay: 150ms">
                     <div class="relative overflow-hidden aspect-[4/3]">
                         <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-4.0.3&auto=format&fit=crop&q=80&w=800" onerror="this.src='IMG_1469.JPG'" alt="Les betteraves de Naturellement Faye" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -428,7 +608,7 @@
                     </div>
                 </div>
 
-                <!-- Product 3 -->
+                <!-- Légume 3 -->
                 <div class="bg-white rounded-3xl overflow-hidden shadow-md border border-slate-100 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 reveal group" style="transition-delay: 300ms">
                     <div class="relative overflow-hidden aspect-[4/3]">
                         <img src="https://images.unsplash.com/photo-1620127814328-9cc009081e7d?ixlib=rb-4.0.3&auto=format&fit=crop&q=80&w=800" onerror="this.src='IMG_4499.jpeg'" alt="Blettes, cardes, poirées" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -447,7 +627,7 @@
         </div>
     </section>
 
-    <!-- TESTIMONIALS / QUOTE SECTION -->
+    <!-- SECTION CITATION -->
     <section class="py-20 bg-brand-950 text-white relative overflow-hidden">
         <div class="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-10" style="background-image: url('https://images.unsplash.com/photo-1595974482597-4b8da8879bc5');"></div>
         <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
@@ -467,8 +647,8 @@
         </div>
     </section>
 
-    <!-- CONTACT & VISIT SECTION -->
-    <section id="contact" class="section py-20 bg-white">
+    <!-- SECTION CONTACT & FERME -->
+    <section id="contact" class="section py-20 bg-brand-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal">
                 <span class="inline-block px-3.5 py-1 rounded-full bg-brand-100 text-brand-700 font-bold text-xs mb-4 uppercase tracking-widest">
@@ -484,11 +664,10 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
                 
-                <!-- Contact info cards column (Left) -->
+                <!-- Infos contact gauche -->
                 <div class="lg:col-span-5 space-y-6 flex flex-col justify-between reveal">
                     
-                    <!-- Card 1 -->
-                    <div class="bg-brand-50 rounded-3xl p-6 border border-brand-100 flex gap-5 items-start">
+                    <div class="bg-white rounded-3xl p-6 border border-brand-100 shadow-sm flex gap-5 items-start">
                         <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-white text-xl shadow-md shrink-0">
                             <i class="fa-solid fa-location-dot"></i>
                         </div>
@@ -503,8 +682,7 @@
                         </div>
                     </div>
 
-                    <!-- Card 2 -->
-                    <div class="bg-brand-50 rounded-3xl p-6 border border-brand-100 flex gap-5 items-start">
+                    <div class="bg-white rounded-3xl p-6 border border-brand-100 shadow-sm flex gap-5 items-start">
                         <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-white text-xl shadow-md shrink-0">
                             <i class="fa-solid fa-phone"></i>
                         </div>
@@ -517,8 +695,7 @@
                         </div>
                     </div>
 
-                    <!-- Card 3 -->
-                    <div class="bg-brand-50 rounded-3xl p-6 border border-brand-100 flex gap-5 items-start">
+                    <div class="bg-white rounded-3xl p-6 border border-brand-100 shadow-sm flex gap-5 items-start">
                         <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-white text-xl shadow-md shrink-0">
                             <i class="fa-solid fa-clock"></i>
                         </div>
@@ -539,15 +716,15 @@
 
                 </div>
 
-                <!-- Interactive Map column (Right) -->
+                <!-- Carte Interactive Leaflet -->
                 <div class="lg:col-span-7 rounded-3xl overflow-hidden shadow-xl border-4 border-white min-h-[400px] relative reveal" style="transition-delay: 200ms">
                     <div id="map" class="w-full h-full min-h-[400px]"></div>
                 </div>
 
             </div>
 
-            <!-- Formulaire de message de contact en bas -->
-            <div class="mt-16 max-w-4xl mx-auto bg-brand-50 border border-brand-100 p-8 sm:p-10 rounded-[2.5rem] reveal">
+            <!-- Formulaire de contact message -->
+            <div class="mt-16 max-w-4xl mx-auto bg-white border border-brand-100 p-8 sm:p-10 rounded-[2.5rem] reveal">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-2 text-center">Écrivez-nous un message</h3>
                 <p class="text-slate-500 text-center mb-8">Une question ? Un besoin particulier ? Nous vous répondrons avec plaisir !</p>
                 
@@ -555,16 +732,16 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Votre nom</label>
-                            <input type="text" required class="w-full rounded-2xl border-slate-200 bg-white px-5 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="Jean Dupont">
+                            <input type="text" required class="w-full rounded-2xl border-slate-200 bg-brand-50 px-5 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="Jean Dupont">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Votre e-mail</label>
-                            <input type="email" required class="w-full rounded-2xl border-slate-200 bg-white px-5 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="jean.dupont@example.com">
+                            <input type="email" required class="w-full rounded-2xl border-slate-200 bg-brand-50 px-5 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="jean.dupont@example.com">
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-2">Votre message</label>
-                        <textarea required rows="4" class="w-full rounded-2xl border-slate-200 bg-white px-5 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="Bonjour, je souhaiterais savoir s'il reste des potimarrons disponibles ce mercredi..."></textarea>
+                        <textarea required rows="4" class="w-full rounded-2xl border-slate-200 bg-brand-50 px-5 py-3.5 text-slate-800 shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:ring-2 outline-none transition-all" placeholder="Bonjour, je souhaiterais en savoir plus..."></textarea>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="inline-flex items-center gap-2 px-8 py-4 bg-brand-500 text-white rounded-2xl font-bold hover:bg-brand-600 transition-all shadow-md shadow-brand-500/20 hover:-translate-y-0.5">
@@ -584,7 +761,7 @@
     <footer class="bg-slate-900 text-slate-300 pt-16 pb-8 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-                <!-- Branding -->
+                
                 <div class="space-y-4">
                     <span class="text-2xl font-extrabold text-white flex items-center gap-2">🌱 Naturellement Faye</span>
                     <p class="text-sm text-slate-400 leading-relaxed">
@@ -597,18 +774,17 @@
                     </div>
                 </div>
 
-                <!-- Navigation links -->
                 <div>
                     <h4 class="font-bold text-white mb-5 uppercase tracking-wider text-sm">Navigation</h4>
                     <ul class="space-y-3 text-sm">
                         <li><a href="#accueil" class="hover:text-white transition-colors">Accueil</a></li>
                         <li><a href="#a-propos" class="hover:text-white transition-colors">À propos de nous</a></li>
+                        <li><a href="#paniers" class="hover:text-white transition-colors">Commander un panier</a></li>
                         <li><a href="#produits" class="hover:text-white transition-colors">Nos légumes</a></li>
                         <li><a href="#contact" class="hover:text-white transition-colors">Horaires & Contact</a></li>
                     </ul>
                 </div>
 
-                <!-- Commitments links -->
                 <div>
                     <h4 class="font-bold text-white mb-5 uppercase tracking-wider text-sm">Engagements</h4>
                     <ul class="space-y-3 text-sm text-slate-400">
@@ -619,7 +795,6 @@
                     </ul>
                 </div>
 
-                <!-- Contact Quick Links -->
                 <div>
                     <h4 class="font-bold text-white mb-5 uppercase tracking-wider text-sm">Nous joindre</h4>
                     <ul class="space-y-3 text-sm text-slate-400">
@@ -629,7 +804,6 @@
                 </div>
             </div>
 
-            <!-- Bottom Line -->
             <div class="border-t border-slate-800 pt-8 mt-8 text-center text-xs text-slate-500 space-y-2">
                 <p>&copy; 2026 Naturellement Faye. Tous droits réservés.</p>
                 <p>Site internet enrichi et conçu avec soin par Arthur TESSIER DEBIESSE</p>
@@ -637,53 +811,234 @@
         </div>
     </footer>
 
-    <!-- Leaflet JS Map implementation -->
+    <!-- Leaflet JS Map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-        // TRANSLATIONS DATA
+        // TRADUCTIONS
         const translations = {
             fr: {
                 nav_home: "Accueil",
                 nav_about: "À propos",
                 nav_products: "Nos légumes",
                 nav_contact: "Contact",
+                nav_baskets: "🧺 Nos Paniers",
                 hero_title: "Naturellement Faye",
                 hero_description: "Des légumes frais, biologiques et locaux cultivés avec passion dans le respect de la nature.",
                 hero_cta: "Découvrir nos légumes",
+                hero_basket_cta: "Réserver un panier bio",
                 popup_title: "Bienvenue chez nous !",
                 popup_text: "Découvrez nos délicieux légumes biologiques cultivés avec passion. Explorez notre ferme et profitez de produits frais en circuit court.",
-                popup_cta: "Découvrir nos légumes",
-                popup_close: "Fermer"
+                popup_cta: "Découvrir nos paniers",
+                popup_close: "Fermer",
+                basket_badge: "Vente Directe & Fraîcheur",
+                basket_title: "Nos Paniers de Légumes Bio",
+                basket_subtitle: "Nous vous proposons chaque mercredi et samedi des paniers fraîchement récoltés le matin-même, disponibles en trois formats adaptés à vos besoins.",
+                how_it_works_title: "La fraîcheur absolue comme priorité",
+                how_it_works_text1: "Chez Naturellement Faye, pas de stockage inutile. Nous récoltons vos légumes le matin de la vente. C'est pourquoi la composition exacte du panier est finalisée à l'aube en fonction des légumes mûrs et prêts à être dégustés.",
+                how_it_works_text2: "📅 Les jours de retrait : les mercredis après-midi (15h30 - 19h00) ou les samedis matins (9h00 - 12h30) directement à notre ferme à Faye-d'Anjou.",
+                fb_card_badge: "Suivez nos récoltes",
+                fb_card_title: "Composition publiée chaque matin !",
+                fb_card_text: "Nous partageons en photo la composition exacte de nos paniers directement sur notre page Facebook dès la fin de notre récolte matinale. Abonnez-vous pour ne rien rater !",
+                fb_btn: "Voir la page Facebook",
+                basket1_badge: "Solo / Duo",
+                basket1_title: "Le Petit Panier",
+                basket1_desc: "Parfait pour une personne seule ou un couple pour toute la semaine. Contient généralement 3 à 4 variétés de légumes ultra-frais du matin.",
+                bullet_fresh: "Récolté le matin-même",
+                bullet_weight_1: "Environ 2.5 à 3.5 kg de légumes",
+                bullet_local: "100% Biologique & local",
+                basket_order_btn: "Choisir ce panier",
+                basket_popular: "Le Plus Populaire",
+                basket2_badge: "Famille de 2-3 personnes",
+                basket2_title: "Le Moyen Panier",
+                basket2_desc: "Le format idéal pour couvrir la majorité des besoins d'une petite famille. Un excellent équilibre entre légumes de base (carottes, pommes de terre) et légumes d'exception.",
+                bullet_weight_2: "Environ 4 à 5 kg de légumes",
+                bullet_variety: "5 à 6 variétés différentes",
+                basket3_badge: "Grande Famille / Amateurs",
+                basket3_title: "Le Grand Panier",
+                basket3_desc: "Pour les grandes tablées ou les passionnés de cuisine saine. Une abondance de fraîcheur comprenant des légumes anciens et des herbes aromatiques de saison.",
+                bullet_weight_3: "Environ 6 kg ou plus",
+                bullet_variety_large: "Diversité maximale de saison",
+                booking_title: "Votre réservation de Panier",
+                booking_subtitle: "Préparez votre réservation à venir retirer à la ferme.",
+                booking_selected: "Panier sélectionné",
+                booking_day: "Jour de retrait souhaité",
+                day_wednesday: "Mercredi après-midi (15h30 - 19h00)",
+                day_saturday: "Samedi matin (9h00 - 12h30)",
+                booking_phone: "Votre numéro de téléphone",
+                booking_name: "Nom complet",
+                booking_email: "Adresse e-mail",
+                booking_total: "Montant de la réservation (à régler sur place) :",
+                booking_validate: "Confirmer ma réservation",
+                booking_success_text: "Merci pour votre confiance. Votre panier fraîchement récolté sera prêt pour vous le jour choisi à Faye-d'Anjou. Le paiement se fera directement à la ferme lors du retrait (espèces, chèque ou virement)."
             },
             en: {
                 nav_home: "Home",
                 nav_about: "About Us",
                 nav_products: "Our Vegetables",
                 nav_contact: "Contact & Hours",
+                nav_baskets: "Our Baskets",
                 hero_title: "Naturally Faye",
                 hero_description: "Fresh, organic, and locally grown vegetables cultivated with passion while respecting nature.",
-                hero_cta: "Discover our vegetables",
+                hero_cta: "Our Vegetables",
+                hero_basket_cta: "Book an Organic Basket",
                 popup_title: "Welcome to our Farm!",
                 popup_text: "Discover our delicious organic vegetables grown with love and passion. Explore our catalog and pick fresh products.",
-                popup_cta: "See our vegetables",
-                popup_close: "Close"
+                popup_cta: "Discover our baskets",
+                popup_close: "Close",
+                basket_badge: "Direct Farm Sale & Freshness",
+                basket_title: "Our Organic Vegetable Baskets",
+                basket_subtitle: "Every Wednesday and Saturday, we offer organic baskets harvested that very morning, in three sizes tailored to your family's needs.",
+                how_it_works_title: "Absolute Freshness as a Priority",
+                how_it_works_text1: "At Naturally Faye, we avoid useless storage. We harvest your vegetables on the morning of the sale. This is why the exact composition of the basket is finalized at dawn depending on which vegetables are fully ripe.",
+                how_it_works_text2: "📅 Pick-up days: Wednesday afternoons (3:30 PM - 7:00 PM) or Saturday mornings (9:00 AM - 12:30 PM) directly at our farm in Faye-d'Anjou.",
+                fb_card_badge: "Follow our harvests",
+                fb_card_title: "Composition published every morning!",
+                fb_card_text: "We share pictures of the exact basket content on our Facebook page as soon as our morning harvest is finished. Subscribe to stay updated!",
+                fb_btn: "See Facebook Page",
+                basket1_badge: "Solo / Duo",
+                basket1_title: "The Small Basket",
+                basket1_desc: "Perfect for a single person or a couple for the whole week. Typically contains 3 to 4 varieties of fresh morning veggies.",
+                bullet_fresh: "Harvested the same morning",
+                bullet_weight_1: "Around 2.5 to 3.5 kg of vegetables",
+                bullet_local: "100% Organic & local",
+                basket_order_btn: "Choose this basket",
+                basket_popular: "Most Popular",
+                basket2_badge: "Family of 2-3 people",
+                basket2_title: "The Medium Basket",
+                basket2_desc: "The ideal size for small families. A perfect balance of daily essentials (carrots, potatoes) and exceptional seasonal produce.",
+                bullet_weight_2: "Around 4 to 5 kg of vegetables",
+                bullet_variety: "5 to 6 different varieties",
+                basket3_badge: "Large Family / Foodies",
+                basket3_title: "The Large Basket",
+                basket3_desc: "For large tables or healthy cooking lovers. An abundance of freshness including heirloom varieties and fresh seasonal herbs.",
+                bullet_weight_3: "Around 6 kg or more",
+                bullet_variety_large: "Maximum seasonal diversity",
+                booking_title: "Your Basket Booking",
+                booking_subtitle: "Prepare your reservation to pick up at the farm.",
+                booking_selected: "Selected Basket",
+                booking_day: "Preferred pick-up day",
+                day_wednesday: "Wednesday afternoon (3:30 PM - 7:00 PM)",
+                day_saturday: "Saturday morning (9:00 AM - 12:30 PM)",
+                booking_phone: "Your Phone Number",
+                booking_name: "Full Name",
+                booking_email: "Email Address",
+                booking_total: "Booking Total (to pay at the farm):",
+                booking_validate: "Confirm my booking",
+                booking_success_text: "Thank you for your trust! Your freshly harvested basket will be waiting for you in Faye-d'Anjou. Payment is done at the farm during pick-up (cash, check, or transfer)."
             },
             es: {
                 nav_home: "Inicio",
                 nav_about: "Nosotros",
                 nav_products: "Nuestras verduras",
                 nav_contact: "Contacto",
+                nav_baskets: "Cestas",
                 hero_title: "Naturalmente Faye",
                 hero_description: "Verduras frescas, ecológicas y locales cultivadas con pasión en armonía con la naturaleza.",
-                hero_cta: "Descubrir nuestras verduras",
+                hero_cta: "Ver las hortalizas",
+                hero_basket_cta: "Reservar cesta ecológica",
                 popup_title: "¡Bienvenido a casa!",
                 popup_text: "Descubra nuestras deliciosas hortalizas de cultivo ecológico. Visite nuestra granja y disfrute de productos locales de primera calidad.",
-                popup_cta: "Ver las hortalizas",
-                popup_close: "Cerrar"
+                popup_cta: "Ver las cestas",
+                popup_close: "Cerrar",
+                basket_badge: "Venta Directa & Frescura",
+                basket_title: "Nuestras Cestas de Verduras Eco",
+                basket_subtitle: "Cada miércoles y sábado le ofrecemos cestas recién cosechadas por la mañana, disponibles en tres tamaños adaptados a sus necesidades.",
+                how_it_works_title: "Frescura absoluta como prioridad",
+                how_it_works_text1: "En Naturalmente Faye, evitamos almacenamiento inútil. Cosechamos sus verduras la mañana de la venta. Es por esto que la composición exacta se define al amanecer según la madurez de los cultivos.",
+                how_it_works_text2: "📅 Días de recogida: Miércoles por la tarde (15:30 - 19:00) o Sábados por la mañana (9:00 - 12:30) directamente en la granja en Faye-d'Anjou.",
+                fb_card_badge: "Sigue nuestras cosechas",
+                fb_card_title: "¡Composición publicada cada mañana!",
+                fb_card_text: "Compartimos fotos con el contenido exacto de la cesta en nuestra página de Facebook en cuanto terminamos la cosecha matutina. ¡Suscríbete!",
+                fb_btn: "Ver página de Facebook",
+                basket1_badge: "Solo / Parejas",
+                basket1_title: "La Cesta Pequeña",
+                basket1_desc: "Perfecta para una persona sola o parejas para toda la semana. Suele contener de 3 a 4 variedades de hortalizas frescas del día.",
+                bullet_fresh: "Cosechado la misma mañana",
+                bullet_weight_1: "Aproximadamente de 2.5 a 3.5 kg de verduras",
+                bullet_local: "100% Ecológico y local",
+                basket_order_btn: "Elegir esta cesta",
+                basket_popular: "La Más Popular",
+                basket2_badge: "Familia de 2-3 personas",
+                basket2_title: "La Cesta Mediana",
+                basket2_desc: "El tamaño ideal para familias pequeñas. Un excelente equilibrio entre verduras básicas (zanahorias, patatas) y delicias de temporada.",
+                bullet_weight_2: "Aproximadamente de 4 a 5 kg de verduras",
+                bullet_variety: "5 o 6 variedades diferentes",
+                basket3_badge: "Gran Familia / Cocinillas",
+                basket3_title: "La Cesta Grande",
+                basket3_desc: "Para grandes mesas o amantes de la cocina sana. Una abundancia de frescura que incluye variedades tradicionales y hierbas frescas.",
+                bullet_weight_3: "Aproximadamente 6 kg o más",
+                bullet_variety_large: "Máxima diversidad de temporada",
+                booking_title: "Su reserva de Cesta",
+                booking_subtitle: "Prepare su reserva para recogerla en la granja.",
+                booking_selected: "Cesta seleccionada",
+                booking_day: "Día de recogida deseado",
+                day_wednesday: "Miércoles por la tarde (15:30 - 19:00)",
+                day_saturday: "Sábado por la mañana (9:00 - 12:30)",
+                booking_phone: "Su número de teléfono",
+                booking_name: "Nombre completo",
+                booking_email: "Dirección de email",
+                booking_total: "Importe total de la reserva (a pagar allí):",
+                booking_validate: "Confirmar mi reserva",
+                booking_success_text: "¡Gracias por su confianza! Su cesta fresca estará lista el día elegido en Faye-d'Anjou. El pago se realiza directamente en la granja al recogerla (efectivo, cheque o transferencia)."
             }
         };
 
-        // DOM elements
+        // Variable d'état de réservation
+        let currentBasketName = "Moyen Panier";
+        let currentBasketUnitPrice = 14;
+        let currentBasketQuantity = 1;
+
+        function selectBasket(name, price) {
+            currentBasketName = name;
+            currentBasketUnitPrice = price;
+            currentBasketQuantity = 1;
+
+            const container = document.getElementById('bookingFormContainer');
+            container.classList.remove('hidden');
+            
+            document.getElementById('selectedBasketName').textContent = name;
+            document.getElementById('selectedBasketPrice').textContent = price + "€ l'unité";
+            document.getElementById('basketQuantity').textContent = currentBasketQuantity;
+            
+            updateTotalPrice();
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function changeQuantity(val) {
+            currentBasketQuantity += val;
+            if (currentBasketQuantity < 1) currentBasketQuantity = 1;
+            document.getElementById('basketQuantity').textContent = currentBasketQuantity;
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+            const total = currentBasketUnitPrice * currentBasketQuantity;
+            document.getElementById('bookingTotalPrice').textContent = total + "€";
+        }
+
+        // Soumission réservation panier
+        const basketBookingForm = document.getElementById('basketBookingForm');
+        const bookingSuccessMessage = document.getElementById('bookingSuccessMessage');
+        
+        basketBookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            bookingSuccessMessage.classList.remove('hidden');
+            
+            setTimeout(() => {
+                basketBookingForm.reset();
+                document.getElementById('bookingFormContainer').classList.add('hidden');
+                bookingSuccessMessage.classList.add('hidden');
+                
+                // Feedback visuel de confirmation
+                const successDiv = document.createElement('div');
+                successDiv.className = "fixed bottom-5 right-5 bg-brand-600 text-white p-4 rounded-2xl shadow-xl z-50 font-bold animate-bounce";
+                successDiv.innerHTML = "🎉 Réservation enregistrée ! À bientôt !";
+                document.body.appendChild(successDiv);
+                setTimeout(() => successDiv.remove(), 4000);
+            }, 2500);
+        });
+
+        // Gestion du Loader et du Popup
         const loader = document.getElementById('loader');
         const header = document.getElementById('header');
         const popupOverlay = document.getElementById('popupOverlay');
@@ -692,30 +1047,27 @@
         const popupPrimary = document.getElementById('popupPrimary');
         const popupSecondary = document.getElementById('popupSecondary');
         
-        // Navigation toggle controls
+        // Navigation mobile
         const menuBtn = document.getElementById('menuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const line1 = document.getElementById('line1');
         const line2 = document.getElementById('line2');
         const line3 = document.getElementById('line3');
 
-        // Language Selectors (Desktop & Mobile)
+        // Sélecteurs de langues
         const langBtn = document.getElementById('langBtn');
         const langDropdown = document.getElementById('langDropdown');
         const langBtnMobile = document.getElementById('langBtnMobile');
         const langDropdownMobile = document.getElementById('langDropdownMobile');
         const langOptions = document.querySelectorAll('.lang-option');
 
-        // Loader Management
         window.addEventListener('load', () => {
             setTimeout(() => {
                 loader.classList.add('opacity-0');
                 loader.classList.add('pointer-events-none');
                 
-                // Show Popup shortly after loader vanishes
                 setTimeout(() => {
                     popupOverlay.classList.remove('hidden');
-                    // Add smooth delayed active animation
                     setTimeout(() => {
                         popupOverlay.classList.add('bg-black/60');
                         popupContent.classList.remove('scale-95', 'opacity-0');
@@ -725,7 +1077,7 @@
             }, 1000);
         });
 
-        // Sticky Header / Background on Scroll
+        // Sticky Header au Scroll
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
                 header.classList.add('glass-header', 'shadow-md', 'border-slate-100');
@@ -736,7 +1088,6 @@
             }
         });
 
-        // Popup Actions
         function closePopup() {
             popupContent.classList.remove('scale-100', 'opacity-100');
             popupContent.classList.add('scale-95', 'opacity-0');
@@ -751,10 +1102,10 @@
         });
         popupPrimary.addEventListener('click', () => {
             closePopup();
-            document.querySelector('#produits').scrollIntoView({ behavior: 'smooth' });
+            document.querySelector('#paniers').scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Mobile Menu Toggling
+        // Toggle du Menu Mobile
         let isMenuOpen = false;
         menuBtn.addEventListener('click', () => {
             isMenuOpen = !isMenuOpen;
@@ -771,7 +1122,6 @@
             }
         });
 
-        // Close menu on link click
         mobileMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.style.maxHeight = '0px';
@@ -782,7 +1132,7 @@
             });
         });
 
-        // Language Dropdowns (Toggles)
+        // Dropdowns Langues
         langBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             langDropdown.classList.toggle('opacity-0');
@@ -797,28 +1147,23 @@
             langDropdownMobile.classList.toggle('pointer-events-none');
         });
 
-        // Close language menus if clicked elsewhere
         document.addEventListener('click', () => {
             langDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
             langDropdownMobile.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
         });
 
-        // Set Language Logic
         langOptions.forEach(option => {
-            option.addEventListener('click', function(e) {
+            option.addEventListener('click', function() {
                 const lang = this.getAttribute('data-lang');
                 const flag = this.getAttribute('data-flag');
                 const langName = this.getAttribute('data-name');
 
-                // Update UI text
                 document.getElementById('currentFlag').textContent = flag;
                 document.getElementById('currentLang').textContent = langName;
                 document.getElementById('currentFlagMobile').textContent = flag;
 
-                // Set HTML language tag
                 document.documentElement.lang = lang;
 
-                // Update translated elements
                 document.querySelectorAll('[data-translate]').forEach(el => {
                     const key = el.getAttribute('data-translate');
                     if (translations[lang] && translations[lang][key]) {
@@ -828,7 +1173,7 @@
             });
         });
 
-        // Contact Form Handlers
+        // Formulaire Contact
         const contactForm = document.getElementById('contactForm');
         const formSuccess = document.getElementById('formSuccess');
         contactForm.addEventListener('submit', (e) => {
@@ -840,7 +1185,7 @@
             }, 5000);
         });
 
-        // Scroll Reveal Trigger Logic
+        // Animations Reveal au scroll
         const reveals = document.querySelectorAll('.reveal');
         function checkReveal() {
             const windowHeight = window.innerHeight;
@@ -855,21 +1200,20 @@
         window.addEventListener('scroll', checkReveal);
         window.addEventListener('load', checkReveal);
 
-        // Leaflet Dynamic Map Setup (Lat/Lon coordinates for Faye-d'Anjou: 47.2917, -0.4851)
+        // Carte Interactive Leaflet (Coordonnées de Faye-d'Anjou : 47.2917, -0.4851)
         const initialCoordinates = [47.2917, -0.4851];
         const map = L.map('map', {
             center: initialCoordinates,
             zoom: 13,
-            scrollWheelZoom: false // prevents zoom hijacking on scroll
+            scrollWheelZoom: false
         });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        // Green Custom Icon for farmer look
         const greenIcon = L.divIcon({
-            html: '<div style="background-color: #629f49; width: 40px; height: 40px; border-radius: 50%; display: flex; items-center: justify-content: center; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3);" class="flex items-center justify-center"><span style="font-size: 18px;">🌱</span></div>',
+            html: '<div style="background-color: #629f49; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3);" class="flex items-center justify-center"><span style="font-size: 18px;">🌱</span></div>',
             iconSize: [40, 40],
             iconAnchor: [20, 20]
         });
